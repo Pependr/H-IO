@@ -1,2 +1,5 @@
-# H-IO
-A small python package for handling and managing config files
+# ToDo
+- Encoders and decoders for json and toml
+- Integrations (dataclasses, enum, pathlib, typing)
+- File IO and management
+- Complex data structures automations

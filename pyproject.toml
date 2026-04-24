@@ -1,0 +1,16 @@
+[project]
+name = "hio"
+version = "0.1.0"
+description = "A python package for handling config files"
+readme = "README.md"
+authors = [
+    { name = "Pependr", email = "antonkudrikov88@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pytest>=9.0.3",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.7,<0.12.0"]
+build-backend = "uv_build"
