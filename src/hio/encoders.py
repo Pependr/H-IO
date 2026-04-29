@@ -1,9 +1,9 @@
 from hio._internals.exceptions import RegistryError
-from hio._internals.typingtools import is_built_in, DataclassInstance
+from hio._internals.typingtools import DataclassInstance, is_built_in
 
-from typing import Callable, Any, cast
-from collections.abc import Mapping, Sequence
-from dataclasses import fields, is_dataclass
+from typing import Any
+from collections.abc import Mapping, Sequence, Callable
+from dataclasses import fields
 from enum import Enum
 from pathlib import Path
 
@@ -18,9 +18,6 @@ _REGISTRY: Registry[Any] = {}
 def register[I](
     tp: type[I], overwrite_parent: bool = False
 ) -> Callable[[EncoderFn[I]], EncoderFn[I]]:
-    if is_dataclass(tp) and not overwrite_parent:
-        raise ValueError(f"Dataclasses handling is built in")
-
     for key in _REGISTRY.keys():
         if (issubclass(tp, key) and not overwrite_parent) or (tp is key):
             raise RegistryError(key, _REGISTRY,
@@ -41,9 +38,6 @@ def resolve[I](tp: type[I]) -> EncoderFn[I]:
         if issubclass(tp, key):
             return _REGISTRY[key]
     else:
-        if is_dataclass(tp):
-            return cast(EncoderFn[I], encode_dataclass)
-
         raise RegistryError(tp, _REGISTRY,
             f"Encoder for type {tp.__name__} is not registered")
 
@@ -69,6 +63,7 @@ def encode(obj: object) -> Any:
     return encoder(obj)
 
 
+@register(DataclassInstance)
 def encode_dataclass(dcl: DataclassInstance) -> dict[str, Any]:
     encoded: dict[str, Any] = {}
     

@@ -52,7 +52,7 @@ def test_register_dataclass_error() -> None:
     @dataclass
     class A: ...
 
-    with pytest.raises(ValueError, match="Dataclasses handling is built in"):
+    with pytest.raises(RegistryError, match="Encoder for type DataclassInstance is already registered"):
         encoders.register(A)(lambda _: "a")
 
     @encoders.register(A, overwrite_parent=True)
